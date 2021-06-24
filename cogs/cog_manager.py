@@ -26,7 +26,7 @@ class CogCog(commands.Cog, name="Cog Controls"):
         await ctx.reply(f"{extension} has been loaded")
 
     @commands.command(name="unload", help="unloads cog")
-    async def reload(self, ctx, extension):
+    async def unload(self, ctx, extension):
         self.unload_cog(extension)
         await ctx.reply(f"{extension} has been unloaded")
 
