@@ -1,4 +1,5 @@
 from discord.ext import commands
+from random import randint
 
 
 class CogCog(commands.Cog, name="Cog Controls"):
@@ -30,6 +31,12 @@ class CogCog(commands.Cog, name="Cog Controls"):
         self.unload_cog(extension)
         await ctx.reply(f"{extension} has been unloaded")
 
+    @commands.command(name="coin", help="to toss a coin 0 or 1")
+    async def toss_coin(self, ctx, extension=1):
+        coin = randint(0, extension)
+        if extension > 1:
+            coin + 1
+        await ctx.reply(coin)
 
 def setup(bot):
     bot.add_cog(CogCog(bot))
