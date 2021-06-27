@@ -1,4 +1,7 @@
+import discord
 from discord.ext import commands
+
+from cogs.db_manager import connect_to_db
 
 
 class CogCog(commands.Cog, name="Cog Controls"):
@@ -29,6 +32,12 @@ class CogCog(commands.Cog, name="Cog Controls"):
     async def unload(self, ctx, extension):
         self.unload_cog(extension)
         await ctx.reply(f"{extension} has been unloaded")
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await connect_to_db(self.bot)
+        channel = discord.utils.get(self.bot.get_all_channels(), name="bot-testing")
+        await channel.send("bot online")
 
 
 def setup(bot):
