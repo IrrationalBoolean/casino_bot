@@ -1,3 +1,4 @@
+# Krzysztof requesting for comment regarding the direction I am taking before I proceed any further
 cardsInDeck = [suit + str(val) for suit in 'cdhs' for val in [i for i in range(2, 11)] + ['j', 'q', 'k', 'a']]
 
 class Hand(object):
