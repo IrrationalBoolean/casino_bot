@@ -1,6 +1,17 @@
 from discord.ext import commands
-import discord
 import aiosqlite
+# from utils.qualifier import make_table
+#
+#
+# async def return_leaderboard(bot, guild_id):
+#     async with bot.db.execute("SELECT user_id, balance, total_earnings, total_losses FROM user "
+#                               "WHERE guild_id = ? ORDER BY balance DESC LIMIT 5",
+#                               (guild_id,)) as cursor:
+#         rows = await cursor.fetchall()
+#         new_rows = [[await bot.fetch_user(row[0]) , *row[1:]] for row in rows]
+#         for item in new_rows:
+#             item[0] = item[0].display_name
+#         return "```" + make_table(rows=new_rows, labels=["ID","Wallet","Profits","Losses"], centered=True) + "```"
 
 
 async def connect_to_db(bot):
@@ -61,23 +72,28 @@ async def get_balance(bot, user_id, guild_id):
         return None
 
 
+
 class DatabaseCog(commands.Cog, name="DatabaseCog"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        await connect_to_db(self.bot)
-        channel = discord.utils.get(self.bot.get_all_channels(), name="bot-testing")
-        await channel.send("bot online")
+    # await ctx.channel.send(await return_leaderboard(self.bot, ctx.guild.id))
 
     @commands.command()
-    async def earn(self, ctx, amount):
-        await adjust_balance_earned(self.bot, int(amount), ctx.author.id, ctx.guild.id)
+    async def earn(self, ctx, amount: int):
+        if amount > 1000:
+            amount = 1000
+        if amount < -1000:
+            amount = -1000
+        await adjust_balance_earned(self.bot, amount, ctx.author.id, ctx.guild.id)
 
     @commands.command()
-    async def get(self, ctx, amount):
-        await adjust_balance(self.bot, int(amount), ctx.author.id, ctx.guild.id)
+    async def get(self, ctx, amount: int):
+        if amount > 1000:
+            amount = 1000
+        if amount < -1000:
+            amount = -1000
+        await adjust_balance(self.bot, amount, ctx.author.id, ctx.guild.id)
 
     @commands.command()
     async def bal(self, ctx):
