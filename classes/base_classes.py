@@ -19,8 +19,14 @@ class Hand(object):
     def __iter__(self):
         return iter(self._cards)
 
+    def __bool__(self):
+        return len(self) > 0
+
+    def __getitem__(self, index):
+        return self._cards[index]
+
     def __repr__(self):
-        return str(self.cards)
+        return repr(self.cards)
 
     @property
     def cards(self):
