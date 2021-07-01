@@ -13,5 +13,7 @@ def load_decks() -> dict:
         card = image.split('/')[-1].split('.')[0]
         deck = image.split('/')[1]
         decks[deck][card] = img
-
+    for deck in decks:
+        decks[deck]["size"] = decks[deck]["SA"].size
+        print(decks[deck]["size"], deck)
     return decks
