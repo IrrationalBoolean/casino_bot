@@ -2,7 +2,7 @@
 cardsInDeck = [suit + str(val) for suit in 'CDHS' for val in [i for i in range(2, 10)] + [0] + ['J', 'Q', 'K', 'A']]
 
 
-class Hand(object):
+class Hand:
     def __init__(self):
         self._cards = []
 
@@ -41,19 +41,6 @@ class Hand(object):
         else:
             self._cards = [cards]
 
-   # def getCards(self, isKeyOnly: bool = False, isImageOnly: bool = False) -> list:
-   #      assert (type(isImageOnly) == bool and type(isKeyOnly) == bool) and not (isImageOnly and isKeyOnly)
-   #      try:
-   #          if isImageOnly:
-   #              return [list(card.values())[0] for card in self._cards][:]
-   #          elif isKeyOnly:
-   #              return [list(card.keys())[0] for card in self._cards][:]
-   #          else:
-   #              return self._cards[:]
-   #      except AssertionError:
-   #          pass
-   #          # invalid request operation
-
     def discard(self, card_choice=None):
         """
         discards a card from hand
@@ -81,11 +68,12 @@ class Hand(object):
             self.discard()
 
 
-class Player(object):
-    def __init__(self, buyin, seatnum, is_dealer=False):
+class Player:
+    def __init__(self, buyin, is_dealer=False):
         self._balance = buyin
-        self._seat = seatnum
         self._is_dealer = is_dealer
+        self.seat = None
+        self.hand = None
 
     def __iadd__(self, amount):
         self.balance = self.balance + amount
@@ -103,20 +91,12 @@ class Player(object):
         return self._balance
 
     @property
-    def seat(self):
-        return self._seat
-
-    @property
     def is_dealer(self):
         return self._is_dealer
 
     @balance.setter
     def balance(self, amount):
         self._balance = amount
-
-    @seat.setter
-    def seat(self, num):
-        self._seat = num
 
     @is_dealer.setter
     def is_dealer(self, button: bool):
@@ -147,3 +127,10 @@ class Player(object):
 
     def all_in(self):
         self.bet(self.balance)
+
+
+class Game:
+    MAX_SEATS = 1
+
+    def __init__(self):
+        pass
