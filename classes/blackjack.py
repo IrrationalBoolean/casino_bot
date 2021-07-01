@@ -54,21 +54,22 @@ class BlackJackPlayer(Player):
 
 
 class BlackJackGame(Game):
-    MAX_SEATS = 7
+    MAX_SEATS = 8
     FULL_DECK = [suit + str(val) for suit in 'CDHS' for val in [i for i in range(2, 11)]
                  + ['J', 'Q', 'K', 'A']]
 
     def __init__(self):
         super().__init__()
-        self.table = [None for _ in range(7)]
+        self.table = [None for _ in range(self.MAX_SEATS)]
         self.table[0] = BlackJackPlayer(0,  is_dealer=True)
         self.players = sum([1 for seat in self.table if seat])
         self.discarded = []
         self.cards = self.FULL_DECK[:]
         random.shuffle(self.cards)
 
-    def seat(self, player:BlackJackPlayer):
+    def seat(self, player: BlackJackPlayer):
         if self.players == self.MAX_SEATS:
+            print(self.players)
             return False
         for idx, seat in enumerate(self.table):
             if seat is None:
