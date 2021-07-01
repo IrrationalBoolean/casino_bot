@@ -4,7 +4,6 @@ import random
 from PIL import Image
 from classes.blackjack import BlackJackHand
 
-
 import io
 
 
@@ -16,13 +15,29 @@ async def draw(image: Image, ctx):
         return await ctx.channel.send(file=discord.File(ib, 'card.png'))
 
 
+def create_image(hand: BlackJackHand, deck: dict):
+    """
+    :BlackJackHand hand: player hand
+    :dict deck: deck from which to draw (use bot.decks[deck])
+    """
+    width, height = deck[hand[0]].size
+    total_width = width + ((len(hand) - 1) * ((width // 3) * 2))
+    img = Image.new("RGBA", (total_width, height), (0, 0, 0, 0))
+    for idx, image in enumerate(hand):
+        x_y = (idx * (width // 3 * 2), 0)
+        img.paste(deck[image], x_y, deck[image])
+    return img
+
+def make_blank_table():
+    pass
+
+
+
+
+
 class TestCog(commands.Cog, name="Testing"):
     def __init__(self, bot):
         self.bot = bot
-    #
-    # @commands.command(name="test")
-    # async def test(self, ctx, *card):
-    #     await ctx.reply(f"{' '.join(card)}")
 
     @commands.command(name="card")
     async def card(self, ctx, card, deck=None):
@@ -35,7 +50,7 @@ class TestCog(commands.Cog, name="Testing"):
         await draw(img, ctx)
 
     @commands.command(name="hand", help="delivers requested hand")
-    async def hand(self, ctx, cards = None, deck=None):
+    async def hand(self, ctx, cards=None, deck=None):
         if cards is None:
             cards = ["SA", "SK", "SQ", "SJ", "S10"]
         if len(cards[0]) == 1:
@@ -54,21 +69,23 @@ class TestCog(commands.Cog, name="Testing"):
 
     @commands.command(name="decks")
     async def decks(self, ctx):
-        embed = discord.Embed(title="Available Styles", description=f"`{'`, `'.join(self.bot.decks.keys())}`",
+        embed = discord.Embed(title="Available Styles",
+                              description=f"`{'`, `'.join(self.bot.decks.keys())}`",
                               color=0x992d22)
         await ctx.channel.send(embed=embed)
 
-
-
     @commands.command(name="count")
-    async def count(self, ctx, hand):
+    async def count(self, ctx, hand, deck=None):
+        if deck is None:
+            style = random.choice(["byron_knoll", "dice_trumps"])
+            deck = self.bot.decks[style]
         cards = hand.split('.')
         player_hand = BlackJackHand()
         for card in cards:
             player_hand += card.upper()
         await ctx.reply(f"Your hand is valued at {player_hand.tabulate_score()}")
-
-
+        img = create_image(player_hand, deck)
+        await draw(img, ctx)
 
 
 def setup(bot):
