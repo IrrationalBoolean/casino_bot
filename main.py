@@ -3,7 +3,7 @@ from dotenv import dotenv_values
 from utils.deck_loader import load_decks
 
 
-on_start_cogs = ["cog_manager", "db_manager"]
+on_start_cogs = ["cog_manager", "db_manager", "coin_game"]
 dotenv = dotenv_values(".env")
 TOKEN = dotenv["TOKEN"]
 bot = commands.Bot(command_prefix="<>")
